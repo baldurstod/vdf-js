@@ -19,7 +19,7 @@ export function stringify(kv, options = {}) {
 			if (Array.isArray(value)) {
 				// sub object
 
-				buffer += `${tabs}${currentEntity.key}\n${tabs}{\n`;
+				buffer += `${tabs}${escape(currentEntity.key)}\n${tabs}{\n`;
 				tabs += '\t';
 
 				// We push true to indicate end of an object
@@ -31,7 +31,7 @@ export function stringify(kv, options = {}) {
 				}
 			} else {
 				// primitive value
-				buffer += `${tabs}${currentEntity.key} ${currentEntity.value}\n`;
+				buffer += `${tabs}${escape(currentEntity.key)} ${escape(currentEntity.value)}\n`;
 
 			}
 		}
@@ -39,4 +39,17 @@ export function stringify(kv, options = {}) {
 	}
 
 	return buffer;
+}
+
+function escape(str, forceQuotes = false) {
+	const quotify = forceQuotes || /[\s\r\n"'{}]/.test(str);
+
+	if (quotify) {
+		str = str.replaceAll('"', '\\"');
+		str = str.replaceAll('\r', '\\r');
+		str = str.replaceAll('\n', '\\n');
+		return '"' + str + '"';
+	}
+
+	return str;
 }
