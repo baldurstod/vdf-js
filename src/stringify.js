@@ -1,8 +1,8 @@
 
-export function stringify(kv, options = {}) {
+export function stringify(kv, { prettyPrint = true } = {}) {
 	let buffer = '';
 
-	let tabs = '';
+	let indent = '';
 
 	let objectStack = [];
 	for (let i = kv.value.length - 1; i >= 0; --i) {
@@ -12,15 +12,19 @@ export function stringify(kv, options = {}) {
 	let currentEntity = objectStack.pop();
 	while (currentEntity) {
 		if (currentEntity === true) {
-			tabs = tabs.slice(0, -1);
-			buffer += `${tabs}}\n`;
+			if (prettyPrint) {
+				indent = indent.slice(0, -1);
+			}
+			buffer += `${indent}}\n`;
 		} else {
 			const value = currentEntity.value;
 			if (Array.isArray(value)) {
 				// sub object
 
-				buffer += `${tabs}${escape(currentEntity.key)}\n${tabs}{\n`;
-				tabs += '\t';
+				buffer += `${indent}${escape(currentEntity.key)}\n${indent}{\n`;
+				if (prettyPrint) {
+					indent += '\t';
+				}
 
 				// We push true to indicate end of an object
 				objectStack.push(true);
@@ -31,7 +35,7 @@ export function stringify(kv, options = {}) {
 				}
 			} else {
 				// primitive value
-				buffer += `${tabs}${escape(currentEntity.key)} ${escape(currentEntity.value)}\n`;
+				buffer += `${indent}${escape(currentEntity.key)} ${escape(currentEntity.value)}\n`;
 
 			}
 		}
