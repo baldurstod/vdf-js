@@ -1,0 +1,7 @@
+{
+	"name": "vdf",
+	"version": "0.0.1",
+	"description": "A VDF (Valve Data Format) parser for javascript",
+	"main": "src/index.js",
+	"type": "module"
+}
