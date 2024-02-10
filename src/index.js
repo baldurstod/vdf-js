@@ -1,3 +1,4 @@
+export { stringify } from './stringify.js';
 import { KeyValue } from './keyvalue.js';
 export { KeyValue };
 
