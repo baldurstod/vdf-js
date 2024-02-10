@@ -39,6 +39,9 @@ TokenLoop:
 					result = currentLevel;
 				}
 				break;
+			case TOKEN_STRING_VALUE:
+				stringStack.push(s);
+				//fallthrough
 			case TOKEN_NEW_LINE:
 				if (stringStack.length > 1) {
 					const value = stringStack.pop();
@@ -46,8 +49,6 @@ TokenLoop:
 					currentLevel.value.push(new KeyValue(key, value));
 				}
 				break;
-			case TOKEN_STRING_VALUE:
-				stringStack.push(s);
 				break;
 			case TOKEN_END:
 				break TokenLoop;
@@ -69,9 +70,12 @@ function getNextToken(reader) {
 				return [TOKEN_OPENING_BRACE];
 			case '}':
 				return [TOKEN_CLOSING_BRACE];
-			case '\r', '\n':
+			case '\r':
+			case '\n':
 				return [TOKEN_NEW_LINE];
-			case ' ', '\t'://just eat a char
+			case ' ':
+			case '\t':
+				//just eat a char
 				break;
 			case '"':
 				let s = "";
@@ -99,6 +103,30 @@ function getNextToken(reader) {
 					const c = getNextRune(reader);
 					if (c == '\r' || c == '\n') {
 						break;
+					}
+				}
+				break;
+			default:
+				// unquoted string
+				let unquoted = c;
+				while (reader.offset < reader.len) {
+					const c = getNextRune(reader);
+					switch (c) {
+						case '"':
+						case '\'':
+							throw "Quote in an unquoted string";
+						case '{':
+						case '}':
+							// Get back one character
+							--reader.offset;
+							//fallthrough
+						case ' ':
+						case '\t':
+						case '\r':
+						case '\n':
+							return [TOKEN_STRING_VALUE, unquoted];
+						default:
+							unquoted += c;
 					}
 				}
 				break;
