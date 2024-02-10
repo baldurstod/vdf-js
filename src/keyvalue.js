@@ -5,7 +5,7 @@ export class KeyValue {
 	}
 
 	getKeyByName(key) {
-		if (typeof this.value == 'array') {
+		if (Array.isArray(this.value)) {
 			for (let subValue of this.value) {
 				if (subValue.key == key) {
 					return subValue;
@@ -16,7 +16,7 @@ export class KeyValue {
 	}
 
 	getKeysByName(key) {
-		if (typeof this.value == 'array') {
+		if (Array.isArray(this.value)) {
 			const res = [];
 			for (let subValue of this.value) {
 				if (subValue.key == key) {
@@ -29,7 +29,7 @@ export class KeyValue {
 	}
 
 	getKeys() {
-		if (typeof this.value == 'array') {
+		if (Array.isArray(this.value)) {
 			const res = [];
 			for (let subValue of this.value) {
 				res.push(subValue);
