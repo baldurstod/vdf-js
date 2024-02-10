@@ -1,4 +1,5 @@
 import { KeyValue } from './keyvalue.js';
+export { KeyValue };
 
 const TOKEN_OPENING_BRACE = 1;
 const TOKEN_CLOSING_BRACE = 2;
