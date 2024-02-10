@@ -2,10 +2,14 @@
 export function stringify(kv, options = {}) {
 	let buffer = '';
 
-	let currentEntity = kv;
-	let objectStack = [];
 	let tabs = '';
 
+	let objectStack = [];
+	for (let i = kv.value.length - 1; i >= 0; --i) {
+		objectStack.push(kv.value[i]);
+	}
+
+	let currentEntity = objectStack.pop();
 	while (currentEntity) {
 		if (currentEntity === true) {
 			tabs = tabs.slice(0, -1);
