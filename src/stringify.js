@@ -45,8 +45,10 @@ export function stringify(kv, { prettyPrint = true } = {}) {
 	return buffer;
 }
 
-function escape(str, forceQuotes = false) {
-	const quotify = forceQuotes || /[\s\r\n"'{}]/.test(str);
+function escape(value, forceQuotes = false) {
+	let str = String(value);
+
+	const quotify = forceQuotes || /[\s\r\n"'{}]/.test(str) || str.length == 0;
 
 	if (quotify) {
 		str = str.replaceAll('"', '\\"');
